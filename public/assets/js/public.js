@@ -4,10 +4,12 @@
 	$(function () {
 
 		// Grab initial filter if there's a hash on the URL
-//		var initialFilter = window.location.hash && ( '.' + window.location.hash.substr(1) ) || '*';
 
-		var initialFilter = window.location.hash && $.map(window.location.hash.substr(1).split(","), function(f){ return "." + f; });
+		var initialFilter = [];
 
+		if (window.location.hash) {
+			initialFilter = $.map(window.location.hash.substr(1).split(","), function(f){ return "." + f; });
+		}
 
 		// Initialize Isotope
 		var $container = $('#iso-loop').imagesLoaded( function () {
@@ -107,9 +109,7 @@
 						$(this).addClass('filteractive');
 					}
 				});
-
-			}else{
-
+			} else {
 				inclusive_selectors = [];
 				$('#filters a.filteractive').removeClass('filteractive');
 				$('#filters [data-filter="*"]').addClass('filteractive');
