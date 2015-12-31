@@ -4,16 +4,27 @@
 	$(function () {
 
 		// Grab initial filter if there's a hash on the URL
-		var initialFilter = window.location.hash && ( '.' + window.location.hash.substr(1) ) || '*';
+//		var initialFilter = window.location.hash && ( '.' + window.location.hash.substr(1) ) || '*';
+
+		var initialFilter = window.location.hash && $.map(window.location.hash.substr(1).split(","), function(f){ return "." + f; });
+
 
 		// Initialize Isotope
 		var $container = $('#iso-loop').imagesLoaded( function () {
 			$container.fadeIn().isotope({
 				itemSelector : '.iso-post',
 				layoutMode : iso_vars.iso_layout,
-				filter : initialFilter
+				filter : initialFilter.join('')
 			});
 		});
+
+		// initialize activeFilter
+		$("[data-filter]").each(function(index){
+			if (initialFilter.indexOf($(this).attr('data-filter')) !== -1) {
+				$(this).addClass('filteractive');
+			}
+		});
+
 
 		// Initialize infinite scroll if required
 		if ( iso_vars.iso_paginate == 'yes' ){
@@ -66,8 +77,9 @@
 			}
 		});
 
-		var $filters = $('#filters')
-		var inclusive_selectors = [];
+		var $filters = $('#filters');
+
+		var inclusive_selectors = initialFilter;
 
 		// Set up the click event for filtering
 		$filters.on('click', 'a', function ( event ) {
@@ -104,9 +116,12 @@
 			}
 
 			//nice url stuff, this should be an input above, but whatever
-			var niceSelectors = $.map(inclusive_selectors,function(s){s.substr(1);});
+			var niceSelectors = $.map(inclusive_selectors,function(s){
+				return s.substr(1);
+			});
+
 			if (history.pushState) {
-				history.pushState( null, null, '#' + niceSelectors.join("_"));
+				history.pushState( null, null, '#' + niceSelectors.join(","));
 			}else{
 				location.hash = niceSelectors.join("_");
 			}
