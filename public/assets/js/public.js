@@ -66,17 +66,54 @@
 			}
 		});
 
+		var $filters = $('#filters')
+		var inclusive_selectors = [];
+
 		// Set up the click event for filtering
-		$('#filters').on('click', 'a', function ( event ) {
+		$filters.on('click', 'a', function ( event ) {
+
 			event.preventDefault();
-			$('#filters a.filteractive').removeClass('filteractive');
-			$(this).addClass('filteractive');
 
-			var selector = $(this).attr('data-filter'),
-				niceSelector = selector.substr(1);
+			var selector = $(this).attr('data-filter');
 
-			history.pushState ? history.pushState( null, null, '#' + niceSelector ) : location.hash = niceSelector;
-			$container.isotope({ filter: selector });
+			if (selector !="*") {
+				// toggle ftw
+				if (inclusive_selectors.indexOf(selector) !== -1) {
+					console.log("deleting" + selector);
+					inclusive_selectors = $.grep(inclusive_selectors, function(n, i){
+						return n !== selector;
+					});
+					console.log(inclusive_selectors);
+				}else{
+					inclusive_selectors.push(selector);
+				}
+
+				// setting the filter active class
+				$('#filters a.filteractive').removeClass('filteractive');
+				$("[data-filter]").each(function(index){
+					if (inclusive_selectors.indexOf($(this).attr('data-filter')) !== -1) {
+						$(this).addClass('filteractive');
+					}
+				});
+
+			}else{
+
+				inclusive_selectors = [];
+				$('#filters a.filteractive').removeClass('filteractive');
+				$('#filters [data-filter="*"]').addClass('filteractive');
+			}
+
+			//nice url stuff, this should be an input above, but whatever
+			var niceSelectors = $.map(inclusive_selectors,function(s){s.substr(1);});
+			if (history.pushState) {
+				history.pushState( null, null, '#' + niceSelectors.join("_"));
+			}else{
+				location.hash = niceSelectors.join("_");
+			}
+
+			var filterValue = inclusive_selectors.length ? inclusive_selectors.join('') : '*';
+
+			$container.isotope({ filter: filterValue });
 			needPostsCheck();
 		});
 

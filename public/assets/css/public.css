@@ -73,6 +73,10 @@
    display: block;
 }
 
+#filters li a.filteractive {
+  text-decoration: underline;
+}
+
 .iso-container {
    clear: both;
 }
