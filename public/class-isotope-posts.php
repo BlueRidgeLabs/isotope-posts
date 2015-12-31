@@ -370,8 +370,7 @@ class Isotope_Posts {
 
 		// Start the post loop if the post type exists.
 		if ( post_type_exists( $post_type ) && $isoposts->have_posts() ) : ?>
-
-         <div class="iso-container">
+      <div class="iso-container">
    			<ul id="iso-loop">
    			<?php while ( $isoposts->have_posts() ) : $isoposts->the_post(); ?>
    				<li class="<?php if ( $filter_menu == 'yes' && taxonomy_exists( $filter_by ) ) {
@@ -382,28 +381,32 @@ class Isotope_Posts {
 	                  }
 						}
                } ?>iso-post">
-						<?php
-							do_action( "before_isotope_title" );
-							do_action( "before_isotope_title_{$shortcode_id}" );
-						?>
-   					<h2 class="iso-title"><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h2>
-						<?php
-							do_action( "before_isotope_content" );
-							do_action( "before_isotope_content_{$shortcode_id}" );
-						?>
-   					<?php
-   						if ( '' != get_the_post_thumbnail() ) { ?>
-   							<div class="iso-thumb">
-   								<a href="<?php the_permalink() ?>"><?php the_post_thumbnail(); ?></a>
-   							</div>
-   						<?php }
-   					?>
-   					<?php the_excerpt(); ?>
-						<?php
-							do_action( "after_isotope_content" );
-							do_action( "after_isotope_content_{$shortcode_id}" );
-						?>
-   				</li>
+						<?php // this is where we output the template
+            if ($loop_id['template'] != "Default") {
+              get_template_part( $loop_id['template'] );
+            }else{
+              do_action( "before_isotope_title" );
+              do_action( "before_isotope_title_{$shortcode_id}" );
+              ?>
+              <h2 class="iso-title"><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h2>
+            <?php
+              do_action( "before_isotope_content" );
+              do_action( "before_isotope_content_{$shortcode_id}" );
+            ?>
+            <?php
+              if ( '' != get_the_post_thumbnail() ) { ?>
+                <div class="iso-thumb">
+                  <a href="<?php the_permalink() ?>"><?php the_post_thumbnail(); ?></a>
+                </div>
+              <?php }
+            ?>
+            <?php the_excerpt(); ?>
+            <?php
+              do_action( "after_isotope_content" );
+              do_action( "after_isotope_content_{$shortcode_id}" );
+            ?>
+          </li>
+            <?php } // end custom template ?>
    			<?php endwhile; ?>
    			</ul>
          </div>

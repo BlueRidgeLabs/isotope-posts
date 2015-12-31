@@ -176,6 +176,11 @@ if ( !class_exists( 'Isotope_Posts_Settings' ) ) {
 			}
 			$post_type_choices = array_merge( $builtin_post, $cpt_array );
 
+
+      // Create the array of templates
+      $templates =  wp_get_theme()->get_page_templates();
+      $template_choices = array_merge($templates,array("Default"=>"default"));
+
 			// Create the array of taxonomies
 			$taxonomies = get_taxonomies( $args, $output, $operator );
 			$builtin_tax = array(
@@ -212,6 +217,16 @@ if ( !class_exists( 'Isotope_Posts_Settings' ) ) {
 				'std'     => 'post',
 				'choices' => $post_type_choices
 			);
+
+      // What template to use?
+      $this->settings['template'] = array(
+        'section' => 'loop_options',
+        'title'   => __( 'Template Type', $this->plugin_slug ),
+        'desc'    => __( 'Choose what template to display with Isotope.', $this->plugin_slug ),
+        'type'    => 'select',
+        'std'     => 'Default',
+        'choices' => $template_choices
+      );
 
 			// Limit by taxonomy term?
 			$this->settings['limit_posts'] = array(
