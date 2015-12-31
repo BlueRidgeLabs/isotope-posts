@@ -69,9 +69,11 @@
 		// Set up the click event for filtering
 		$('#filters').on('click', 'a', function ( event ) {
 			event.preventDefault();
+			$('#filters a.filteractive').removeClass('filteractive');
+			$(this).addClass('filteractive');
 
 			var selector = $(this).attr('data-filter'),
-			    niceSelector = selector.substr(1);
+				niceSelector = selector.substr(1);
 
 			history.pushState ? history.pushState( null, null, '#' + niceSelector ) : location.hash = niceSelector;
 			$container.isotope({ filter: selector });
