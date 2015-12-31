@@ -383,7 +383,8 @@ class Isotope_Posts {
                } ?>iso-post">
 						<?php // this is where we output the template
             if ($loop_id['template'] != "Default") {
-              get_template_part( $loop_id['template'] );
+              print_r(get_post_meta($post->ID));
+              include( get_template_directory() . "/" . $loop_id['template'] );
             }else{
               do_action( "before_isotope_title" );
               do_action( "before_isotope_title_{$shortcode_id}" );
